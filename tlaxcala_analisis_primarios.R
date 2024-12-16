@@ -39,7 +39,7 @@ barplots.f <- function(data, nombre_dataset, carpeta_destino) {
       geom_bar(fill = "steelblue", color = "black") +
       theme_minimal() +
       coord_flip() +  # Rotar para mejor visualización si hay muchas categorías
-      labs(title = paste("Distribución de", col, "en", nombre_dataset), 
+      labs(title = paste("Distribución de", col, "en  dataset", nombre_dataset), 
            x = col, y = "Frecuencia")
     
     #Guardar el gráfico en el archivo
@@ -54,23 +54,15 @@ barplots.f <- function(data, nombre_dataset, carpeta_destino) {
 #Datos --- --- 
 
 #Dataset de las caracteristicas de agresores de mujeres
-agresores <- vroom::vroom(file = "datatonicas/AGRESORES TLAXCALA_2022_2024.xlsx - AGRESORES.csv")
+agresores <- vroom::vroom(file = "Datatonica/AGRESORES TLAXCALA_2022_2024.xlsx - AGRESORES.csv")
 
 #Dataset de servicios estatales y municipales de atencion a violencia a las mujeres
-servicios <- vroom::vroom(file = "datatonicas/SERVICIOS DE ATENCIÓN TLAXCALA 2022_2024.csv")
+servicios <- vroom::vroom(file = "Datatonica/SERVICIOS DE ATENCIÓN TLAXCALA 2022_2024.csv")
 
 #Descripcion de los casos de violencia a las mujeres
-casos <- vroom::vroom(file = "datatonicas/CASOS TLAXCALA 2022_2024.xlsx - CASOS.csv")
+casos <- vroom::vroom(file = "Datatonica/CASOS TLAXCALA 2022_2024.xlsx - CASOS.csv")
 
-#Analisis primario --- ---
-
-data <-  list(agresores= agresores, 
-              servicios = servicios, 
-              casos = casos)
-
-lapply(data, colnames)
-
-# Renombrar columnas con nombres más amigables
+#Renombrar columnas con nombres más amigables
 colnames(agresores) <- c(
   "id_euv",
   "estado_expediente",
@@ -233,6 +225,11 @@ colnames(servicios) <- c(
   "tiene_discapacidad"
 )
 
+#Lista 
+data <-  list(agresores= agresores, 
+              servicios = servicios, 
+              casos = casos)
+
 #Calculo muestral --- ---
 #En tlaxcala existen 693,083 mujeres (INEGI 2024)
 
@@ -286,11 +283,13 @@ lapply(data, dim)
 # $casos
 # [1] 23184    59
 
-#Analisis primario de proporciones
 
-barplots.f(data[["agresores"]],  "agresores", "datatonicas/agresores_barplots/")
-barplots.f(data[["servicios"]],  "servicios", "datatonicas/servicios_barplots/")
-barplots.f(data[["casos"]],  "casos", "datatonicas/casos_barplots/")
+#Analisis primario --- ---
+
+#Barplots por columna
+barplots.f(data[["agresores"]],  "agresores", "Datatonica/agresores_barplots/")
+barplots.f(data[["servicios"]],  "servicios", "Datatonica/servicios_barplots/")
+barplots.f(data[["casos"]],  "casos", "Datatonica/casos_barplots/")
 
 
 

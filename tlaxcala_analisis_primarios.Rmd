@@ -1,0 +1,72 @@
+---
+title: "Tlaxcala_data.R"
+author: "APPG"
+date: "2024-12-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Script para evaluación de datos para mejorar políticas públicas.
+
+#By 
+# Alejandra Paulina Pérez González
+# Patricia Morales Sánchez
+# Liz Andrea Flores Montoya
+
+
+```{r libra}
+#Librerias --- ---
+pacman::p_load("vroom", 
+               "dplyr", 
+               "ggplot2", 
+               "gridExtra")
+```
+
+Funciones para limpieza de codigo
+
+```{r Funciones}
+
+
+#Funciones --- ---
+
+#Cambiar S/D a NAs
+SD_to_NA <- function(df) {
+  df %>%
+    mutate(across(where(is.character), ~ na_if(.x, "S/D")))
+}
+
+#Eliminar columnas que solo contienen NAs
+eliminar_NA <- function(data) {
+  data <- data %>%
+    select(where(~ !all(is.na(.))))  # Selecciona solo columnas que no contienen solo NAs
+  return(data)
+}
+
+#Función para gráficos de barras
+barplots.f <- function(data, nombre_dataset, carpeta_destino) {
+  #Seleccionar solo columnas categóricas (factor o character)
+  data_categorica <- data %>% select(where(is.character)) %>% mutate_all(as.factor)  # Convertir a factor para asegurar consistencia
+  
+  #Crear gráficos de barras para cada columna
+  for (col in colnames(data_categorica)) {
+    #Crear el gráfico de barras
+    p <- ggplot(data_categorica, aes_string(x = col)) +
+      geom_bar(fill = "steelblue", color = "black") +
+      theme_minimal() +
+      coord_flip() +  # Rotar para mejor visualización si hay muchas categorías
+      labs(title = paste("Distribución de", col, "en  dataset", nombre_dataset), 
+           x = col, y = "Frecuencia")
+    
+    #Guardar el gráfico en el archivo
+    
+    archivo_grafico <- file.path(carpeta_destino, paste0("grafico_", col, "_", nombre_dataset, ".png"))
+    
+    ggsave(archivo_grafico, plot = p, width = 8, height = 6, dpi = 300)
+    
+      }
+}
+
+```
